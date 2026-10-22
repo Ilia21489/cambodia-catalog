@@ -233,5 +233,12 @@ window.addEventListener("hashchange", route);
 
 fetch("data/projects.json")
   .then((r) => r.json())
-  .then((data) => { projects = data; route(); })
+  .then((data) => {
+    projects = data;
+    const start = inTelegram && tg.initDataUnsafe && tg.initDataUnsafe.start_param;
+    if (start && !location.hash && projects.some((p) => p.slug === start)) {
+      history.replaceState(null, "", `#/p/${start}`);
+    }
+    route();
+  })
   .catch(() => { app.textContent = "Не удалось загрузить каталог. Попробуйте открыть позже."; });
