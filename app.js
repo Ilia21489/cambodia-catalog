@@ -122,7 +122,6 @@ function renderBlock(block, project) {
     img.alt = "";
     img.loading = "lazy";
     img.decoding = "async";
-    if (block.w && block.h) { img.width = block.w; img.height = block.h; }
     if (block.src.endsWith(".svg") || (block.w && block.w < 400)) fig.classList.add("logo");
     else fig.onclick = () => openLightbox(block.src);
     fig.append(img);
@@ -196,10 +195,19 @@ function renderProject(project) {
     if (!blocks.length) return;
     const sec = el("section", "section");
     if (title && !skipTitles.has(title.toLowerCase())) sec.append(el("h3", "", title));
-    for (const b of blocks) {
+    let gallery = null;
+    blocks.forEach((b, i) => {
+      const isPhoto = b.t === "image" && !b.src.endsWith(".svg") && !(b.w && b.w < 400);
+      const nextIsPhoto = blocks[i + 1] && blocks[i + 1].t === "image" && !blocks[i + 1].src.endsWith(".svg");
+      if (isPhoto && (gallery || nextIsPhoto)) {
+        if (!gallery) { gallery = el("div", "gallery"); sec.append(gallery); }
+        gallery.append(renderBlock(b, project));
+        return;
+      }
+      gallery = null;
       const node = renderBlock(b, project);
       if (node) sec.append(node);
-    }
+    });
     wrap.append(sec);
   });
   wrap.append(el("p", "footer", "Цены и наличие юнитов меняются — уточняйте актуальную информацию у агента"));
