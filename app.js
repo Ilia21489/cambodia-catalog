@@ -1,4 +1,9 @@
-const CONTACT = "ilya_e88";
+const BRANDS = {
+  bestof: { name: "Best of Cambodia Property", contact: "ilya_e88" },
+  bazanova: { name: "BazaNova", contact: "SvBizInvest" },
+};
+const BRAND = BRANDS[new URLSearchParams(location.search).get("brand")] || BRANDS.bestof;
+const CONTACT = BRAND.contact;
 const tg = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData !== undefined
   ? window.Telegram.WebApp : null;
 const inTelegram = Boolean(tg && tg.platform && tg.platform !== "unknown");
@@ -53,11 +58,11 @@ function setCta(project) {
 
 function renderHome() {
   if (inTelegram) tg.BackButton.hide();
-  document.title = "Каталог новостроек — Best of Cambodia Property";
+  document.title = `Каталог новостроек — ${BRAND.name}`;
   app.replaceChildren();
   const wrap = el("div", "wrap");
   const intro = el("header", "intro");
-  intro.append(el("p", "eyebrow", "Best of Cambodia Property"), el("h1", "", "Каталог новостроек"),
+  intro.append(el("p", "eyebrow", BRAND.name), el("h1", "", "Каталог новостроек"),
     el("p", "", `${projects.length} проектов в Пномпене и Сиануквиле — описания, планировки и условия покупки`));
 
   const districts = ["Все", ...new Set(projects.map((p) => p.city))];
@@ -160,7 +165,7 @@ function actionButton(icon, title, subtitle) {
 }
 
 function renderProject(project) {
-  document.title = `${project.title} — Best of Cambodia Property`;
+  document.title = `${project.title} — ${BRAND.name}`;
   app.replaceChildren();
   window.scrollTo(0, 0);
   if (inTelegram) {
