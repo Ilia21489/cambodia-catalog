@@ -26,6 +26,8 @@ const el = (tag, cls, text) => {
   return node;
 };
 const plain = (html) => html.replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+const plural = (n, one, few, many) =>
+  n % 10 === 1 && n % 100 !== 11 ? one : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? few : many;
 const absolute = (path) => new URL(path, location.href).href;
 
 function contactLink(project) {
@@ -64,7 +66,7 @@ function renderHome() {
   const wrap = el("div", "wrap");
   const intro = el("header", "intro");
   intro.append(el("p", "eyebrow", BRAND.name), el("h1", "", "Каталог новостроек"),
-    el("p", "", `${projects.length} проектов в Пномпене и Сиануквиле — описания, планировки и условия покупки`));
+    el("p", "", `${projects.length} ${plural(projects.length, "проект", "проекта", "проектов")} в Пномпене и Сиануквиле — описания, планировки и условия покупки`));
 
   const districts = ["Все", ...new Set(projects.map((p) => p.city))];
   const chips = el("div", "chips");

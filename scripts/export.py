@@ -10,6 +10,7 @@ from PIL import Image
 
 ROOT_PAGE = "16265c88-cfbf-49e7-9d6f-2a401e8073b6"
 SKIP_PAGES = {"Чеклист"}
+PRICE_SECTION = re.compile(r"(СТАРТОВЫЕ|АКТУАЛЬНЫЕ)?\s*ЦЕНЫ$|ПРАЙС", re.I)
 API = "https://buildin.ai/api"
 BASE = Path(__file__).resolve().parent.parent
 ASSETS = BASE / "assets"
@@ -128,6 +129,8 @@ def export_project(uid: str, title: str) -> dict:
 
     walk(uid)
     sections = [s for s in sections if s["blocks"] or s["title"]]
+    # Цены юнитов в каталог не выводим: их присылает агент по заявке
+    sections = [s for s in sections if not PRICE_SECTION.search(s["title"])]
     return {"id": uid, "slug": slug, "title": title, "sections": sections}
 
 
