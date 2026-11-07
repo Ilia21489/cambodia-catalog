@@ -1,6 +1,6 @@
 const BRANDS = {
   bestof: { name: "Best of Cambodia Property", contact: "ilya_e88" },
-  bazanova: { name: "BazaNova", contact: "SvBizInvest" },
+  bazanova: { name: "BazaNova", contact: "ilya_e88" },
 };
 const BRAND = BRANDS[new URLSearchParams(location.search).get("brand")] || BRANDS.bestof;
 const CONTACT = BRAND.contact;
