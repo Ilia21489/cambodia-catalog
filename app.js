@@ -239,7 +239,7 @@ function route() {
 if (inTelegram) tg.BackButton.onClick(() => { location.hash = ""; });
 window.addEventListener("hashchange", route);
 
-fetch("data/projects.json")
+fetch("data/projects.json", { cache: "no-cache" })  // каталог всегда свежий, без 10-минутного кэша GitHub Pages
   .then((r) => r.json())
   .then((data) => {
     projects = data;
