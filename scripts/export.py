@@ -188,8 +188,8 @@ def main():
     for uid, title in pages:
         print(f"Выгружаю {title}…")
         projects.append(summarize(export_project(uid, title)))
-    if MANUAL.exists():
-        projects += json.loads(MANUAL.read_text())
+    if MANUAL.exists():  # ручные проекты — новинки, показываем первыми
+        projects = json.loads(MANUAL.read_text()) + projects
     (BASE / "data").mkdir(exist_ok=True)
     (BASE / "data" / "projects.json").write_text(json.dumps(projects, ensure_ascii=False, indent=1))
     print(f"Готово: {len(projects)} проектов")
