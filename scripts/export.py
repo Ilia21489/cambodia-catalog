@@ -13,6 +13,7 @@ SKIP_PAGES = {"Чеклист"}
 API = "https://buildin.ai/api"
 BASE = Path(__file__).resolve().parent.parent
 ASSETS = BASE / "assets"
+MANUAL = BASE / "manual" / "projects.json"  # проекты, которых нет в Buildin: собраны вручную, картинки в manual/<slug>/
 MAX_WIDTH = 1600
 
 T_PAGE, T_TEXT, T_BULLET, T_HEADING, T_DIVIDER, T_COLUMNS, T_COLUMN, T_FILE, T_TABLE, T_ROW = 0, 1, 4, 7, 9, 10, 11, 14, 27, 28
@@ -184,6 +185,8 @@ def main():
     for uid, title in pages:
         print(f"Выгружаю {title}…")
         projects.append(summarize(export_project(uid, title)))
+    if MANUAL.exists():
+        projects += json.loads(MANUAL.read_text())
     (BASE / "data").mkdir(exist_ok=True)
     (BASE / "data" / "projects.json").write_text(json.dumps(projects, ensure_ascii=False, indent=1))
     print(f"Готово: {len(projects)} проектов")
