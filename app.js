@@ -1,6 +1,7 @@
 const BRANDS = {
-  bestof: { name: "Best of Cambodia Property", contact: "ilya_e88" },
-  bazanova: { name: "BazaNova", contact: "ilya_e88" },
+  bestof: { name: "Best of Cambodia Property", contact: "ilya_e88", mark: "" },
+  // по метке бот первого касания (cambodia-tg-bot/bot/leads.py) узнаёт заявки из этого каталога
+  bazanova: { name: "BazaNova", contact: "ilya_e88", mark: " (каталог BazaNova)" },
 };
 const BRAND = BRANDS[new URLSearchParams(location.search).get("brand")] || BRANDS.bestof;
 const CONTACT = BRAND.contact;
@@ -29,8 +30,8 @@ const absolute = (path) => new URL(path, location.href).href;
 
 function contactLink(project) {
   const text = project
-    ? `Здравствуйте! Интересует ${project.title}. Подскажите, пожалуйста, актуальные цены и наличие.`
-    : "Здравствуйте! Хочу подобрать недвижимость в Камбодже.";
+    ? `Здравствуйте! Интересует ${project.title}${BRAND.mark}. Подскажите, пожалуйста, актуальные цены и наличие.`
+    : `Здравствуйте! Хочу подобрать недвижимость в Камбодже${BRAND.mark}.`;
   return `https://t.me/${CONTACT}?text=${encodeURIComponent(text)}`;
 }
 
