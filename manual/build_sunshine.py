@@ -152,7 +152,7 @@ project = {
     "district": "Кох Ронг Санлоем",
     "highlights": ["Доходность 8%", "Вилла с бассейном"],
     "pdf": "",
-    "city": "Сиануквиль",
+    "city": "Острова",
     "map": "Koh Rong Sanloem",
     "sections": [{"title": t, "blocks": b} for t, b in sections],
 }

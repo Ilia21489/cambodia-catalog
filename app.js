@@ -66,7 +66,7 @@ function renderHome() {
   const wrap = el("div", "wrap");
   const intro = el("header", "intro");
   intro.append(el("p", "eyebrow", BRAND.name), el("h1", "", "Каталог новостроек"),
-    el("p", "", `${projects.length} ${plural(projects.length, "проект", "проекта", "проектов")} в Пномпене и Сиануквиле — описания, планировки и условия покупки`));
+    el("p", "", `${projects.length} ${plural(projects.length, "проект", "проекта", "проектов")} в Пномпене, Сиануквиле и на островах — описания, планировки и условия покупки`));
 
   const districts = ["Все", ...new Set(projects.map((p) => p.city))];
   const chips = el("div", "chips");
