@@ -151,5 +151,5 @@ project = {
 }
 
 if __name__ == "__main__":
-    (DIR / "projects.json").write_text(json.dumps([project], ensure_ascii=False, indent=1))
-    print("manual/projects.json: J-Tower 3")
+    from build_sunshine import save
+    print("manual/projects.json:", ", ".join(save(project, 0)))

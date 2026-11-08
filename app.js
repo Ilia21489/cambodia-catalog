@@ -107,7 +107,7 @@ function renderBlock(block, project) {
     if (/^посмотреть на карте$/i.test(plain(block.html))) {
       const btn = actionButton("📍", "Посмотреть на карте", "Google Maps");
       const city = project.city === "Сиануквиль" ? "Sihanoukville" : "Phnom Penh";
-      btn.onclick = () => openLink(`https://www.google.com/maps/search/${encodeURIComponent(`${project.title} ${city}`)}`);
+      btn.onclick = () => openLink(`https://www.google.com/maps/search/${encodeURIComponent(project.map || `${project.title} ${city}`)}`);
       return btn;
     }
     const p = el("p");
