@@ -43,7 +43,7 @@ def villa(title, ground, upper, render=None, note=""):
 
 
 sections = [
-    ("", [{"t": "image", "src": IMG + "001.jpg", "w": 1204, "h": 1460}]),
+    ("", [{"t": "image", "src": IMG + "cover2.jpg", "w": 1204, "h": 1460}]),
     ("SUNSHINE COMMUNITY", []),
     ("виллы у моря на острове Кох Ронг Санлоем", [
         text("Курортный комплекс на острове Кох Ронг Санлоем, который называют «Мальдивами Камбоджи». "
@@ -148,7 +148,7 @@ project = {
     "title": "Sunshine Community",
     "heading": "SUNSHINE COMMUNITY",
     "tagline": "виллы у моря на острове Кох Ронг Санлоем",
-    "cover": IMG + "001.jpg",
+    "cover": IMG + "cover2.jpg",
     "district": "Кох Ронг Санлоем",
     "highlights": ["Доходность 8%", "Вилла с бассейном"],
     "pdf": "",

@@ -497,7 +497,7 @@
   "title": "Sunshine Community",
   "heading": "SUNSHINE COMMUNITY",
   "tagline": "виллы у моря на острове Кох Ронг Санлоем",
-  "cover": "manual/sunshine-koh-rong/001.jpg",
+  "cover": "manual/sunshine-koh-rong/cover2.jpg",
   "district": "Кох Ронг Санлоем",
   "highlights": [
    "Доходность 8%",
@@ -512,7 +512,7 @@
     "blocks": [
      {
       "t": "image",
-      "src": "manual/sunshine-koh-rong/001.jpg",
+      "src": "manual/sunshine-koh-rong/cover2.jpg",
       "w": 1204,
       "h": 1460
      }
