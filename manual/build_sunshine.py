@@ -1,4 +1,4 @@
-"""Карточка Sunshine Community (остров Кох Ронг Санлоем) для каталога (нет в Buildin).
+"""Карточка Koh Rong Sanloem Island Resorts (остров Кох Ронг Санлоем) для каталога (нет в Buildin).
 Источники — материалы застройщика, которые прислал Андрей 08.11.2026: презентация проекта, PDF планировок,
 фото с объекта. Цены юнитов и прогноз выручки отеля в каталог не выводим.
 Запуск обновляет запись в manual/projects.json и ручные проекты в начале data/projects.json."""
@@ -44,7 +44,7 @@ def villa(title, ground, upper, render=None, note=""):
 
 sections = [
     ("", [{"t": "image", "src": IMG + "cover2.jpg", "w": 1204, "h": 1460}]),
-    ("SUNSHINE COMMUNITY", []),
+    ("KOH RONG SANLOEM ISLAND RESORTS", []),
     ("виллы у моря на острове Кох Ронг Санлоем", [
         text("Курортный комплекс на острове Кох Ронг Санлоем, который называют «Мальдивами Камбоджи». "
              "Виллы с собственным бассейном, садом и видом на море под управлением отеля."),
@@ -138,15 +138,15 @@ sections = [
               "Дальше — 50% операционной прибыли отеля владельцам"),
     ]),
     ("BAZA NOVA REAL ESTATE", [
-        text("<b>SUNSHINE COMMUNITY — вилла у моря на острове Кох Ронг Санлоем</b>"),
+        text("<b>KOH RONG SANLOEM ISLAND RESORTS — вилла у моря на острове Кох Ронг Санлоем</b>"),
     ]),
 ]
 
 project = {
     "id": "manual-sunshine-koh-rong",
     "slug": "sunshine-koh-rong",
-    "title": "Sunshine Community",
-    "heading": "SUNSHINE COMMUNITY",
+    "title": "Koh Rong Sanloem Island Resorts",
+    "heading": "KOH RONG SANLOEM ISLAND RESORTS",
     "tagline": "виллы у моря на острове Кох Ронг Санлоем",
     "cover": IMG + "cover2.jpg",
     "district": "Кох Ронг Санлоем",

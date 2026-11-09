@@ -494,8 +494,8 @@
  {
   "id": "manual-sunshine-koh-rong",
   "slug": "sunshine-koh-rong",
-  "title": "Sunshine Community",
-  "heading": "SUNSHINE COMMUNITY",
+  "title": "Koh Rong Sanloem Island Resorts",
+  "heading": "KOH RONG SANLOEM ISLAND RESORTS",
   "tagline": "виллы у моря на острове Кох Ронг Санлоем",
   "cover": "manual/sunshine-koh-rong/cover2.jpg",
   "district": "Кох Ронг Санлоем",
@@ -519,7 +519,7 @@
     ]
    },
    {
-    "title": "SUNSHINE COMMUNITY",
+    "title": "KOH RONG SANLOEM ISLAND RESORTS",
     "blocks": []
    },
    {
@@ -1131,7 +1131,7 @@
     "blocks": [
      {
       "t": "text",
-      "html": "<b>SUNSHINE COMMUNITY — вилла у моря на острове Кох Ронг Санлоем</b>"
+      "html": "<b>KOH RONG SANLOEM ISLAND RESORTS — вилла у моря на острове Кох Ронг Санлоем</b>"
      }
     ]
    }
