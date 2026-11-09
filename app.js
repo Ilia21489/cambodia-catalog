@@ -1,12 +1,31 @@
 const BRANDS = {
   bestof: { name: "Best of Cambodia Property", contact: "ilya_e88", mark: "" },
   // по метке бот первого касания (cambodia-tg-bot/bot/leads.py) узнаёт заявки из этого каталога
-  bazanova: { name: "BazaNova", contact: "ilya_e88", mark: " (каталог BazaNova)" },
+  // заявки делятся между менеджерами поровну; бот на их аккаунтах (Telegram для бизнеса) отвечает от имени каждого
+  bazanova: { name: "BazaNova", contact: ["ilya_e88", "AndreyGusev211"], mark: " (каталог BazaNova)" },
 };
 const BRAND = BRANDS[new URLSearchParams(location.search).get("brand")] || BRANDS.bestof;
-const CONTACT = BRAND.contact;
 const tg = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData !== undefined
   ? window.Telegram.WebApp : null;
+const CONTACT = pickContact(BRAND.contact);
+
+// Менеджер для клиента: по его Telegram ID (чётный/нечётный — заявки делятся поровну, и один клиент
+// всегда попадает к одному и тому же менеджеру); вне Telegram — случайно, с запоминанием в браузере.
+function pickContact(contacts) {
+  if (!Array.isArray(contacts)) return contacts;
+  const user = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+  if (user && user.id) return contacts[user.id % contacts.length];
+  try {
+    let i = Number(localStorage.getItem("contact_index"));
+    if (!Number.isInteger(i) || i < 0 || i >= contacts.length) {
+      i = Math.floor(Math.random() * contacts.length);
+      localStorage.setItem("contact_index", String(i));
+    }
+    return contacts[i];
+  } catch (e) {
+    return contacts[Math.floor(Math.random() * contacts.length)];
+  }
+}
 const inTelegram = Boolean(tg && tg.platform && tg.platform !== "unknown");
 const app = document.getElementById("app");
 const cta = document.getElementById("cta");
