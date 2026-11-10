@@ -27,6 +27,27 @@ function pickContact(contacts) {
   }
 }
 const inTelegram = Boolean(tg && tg.platform && tg.platform !== "unknown");
+const BRAND_KEY = BRANDS[new URLSearchParams(location.search).get("brand")] ? new URLSearchParams(location.search).get("brand") : "bestof";
+
+// Статистика посещений (GoatCounter, без cookies). Пути вида /bazanova/open/post, /bazanova/p/j-tower-3,
+// событие /bazanova/lead/j-tower-3 — нажатие «Узнать цены». Пустой код — счётчик выключен.
+const GOATCOUNTER = "bazanova";
+const statQueue = [];
+function track(path, title, event) {
+  if (!GOATCOUNTER) return;
+  const hit = { path: `/${BRAND_KEY}${path}`, title: title || path, event: Boolean(event) };
+  if (window.goatcounter && window.goatcounter.count) window.goatcounter.count(hit);
+  else statQueue.push(hit);
+}
+if (GOATCOUNTER) {
+  window.goatcounter = { no_onload: true, allow_local: false };
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = "https://gc.zgo.at/count.js";
+  s.dataset.goatcounter = `https://${GOATCOUNTER}.goatcounter.com/count`;
+  s.onload = () => statQueue.splice(0).forEach((hit) => window.goatcounter.count(hit));
+  document.head.append(s);
+}
 const app = document.getElementById("app");
 const cta = document.getElementById("cta");
 const lightbox = document.getElementById("lightbox");
@@ -65,9 +86,11 @@ function openLink(url) {
 function setCta(project) {
   const label = project ? "Узнать цены и наличие" : "Подобрать квартиру";
   const url = contactLink(project);
+  const lead = () => track(`/lead/${project ? project.slug : "home"}`, `Заявка: ${project ? project.title : "подбор"}`, true);
+  cta.onclick = lead;
   if (inTelegram) {
     tg.MainButton.offClick(tg.MainButton.__handler || (() => {}));
-    tg.MainButton.__handler = () => openLink(url);
+    tg.MainButton.__handler = () => { lead(); openLink(url); };
     tg.MainButton.setParams({ text: label, is_visible: true });
     tg.MainButton.onClick(tg.MainButton.__handler);
     return;
@@ -251,8 +274,10 @@ lightbox.onclick = () => { lightbox.hidden = true; };
 function route() {
   const m = location.hash.match(/^#\/p\/(.+)$/);
   const project = m && projects.find((p) => p.slug === decodeURIComponent(m[1]));
-  if (project) renderProject(project);
-  else renderHome();
+  if (project) {
+    renderProject(project);
+    track(`/p/${project.slug}`, project.title);
+  } else renderHome();
 }
 
 if (inTelegram) tg.BackButton.onClick(() => { location.hash = ""; });
@@ -263,6 +288,8 @@ fetch("data/projects.json", { cache: "no-cache" })  // каталог всегд
   .then((data) => {
     projects = data;
     const start = inTelegram && tg.initDataUnsafe && tg.initDataUnsafe.start_param;
+    // откуда открыли: из поста (ссылка с проектом), из меню бота или из браузера
+    track(start ? "/open/post" : inTelegram ? "/open/telegram" : "/open/web", "Открытие каталога");
     if (start && !location.hash && projects.some((p) => p.slug === start)) {
       history.replaceState(null, "", `#/p/${start}`);
     }
