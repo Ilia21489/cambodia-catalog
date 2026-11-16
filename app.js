@@ -70,11 +70,47 @@ const plural = (n, one, few, many) =>
   n % 10 === 1 && n % 100 !== 11 ? one : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? few : many;
 const absolute = (path) => new URL(path, location.href).href;
 
-function contactLink(project) {
-  const text = project
+// Короткий опросник перед заявкой: ответы уходят менеджеру в первом сообщении, и бот первого касания
+// (cambodia-tg-bot/bot/leads.py) не задаёт эти вопросы повторно, а сразу отвечает по делу
+const QUIZ = [
+  { key: "Цель", question: "Для какой цели планируете покупку?", options: ["Для жизни", "Для инвестиций"] },
+  { key: "Бюджет", question: "Какой бюджет на покупку?",
+    options: ["$50 000–100 000", "$100 000–200 000", "$200 000–400 000", "Более $400 000"] },
+];
+
+function contactLink(project, answers) {
+  let text = project
     ? `Здравствуйте! Интересует ${project.title}${BRAND.mark}. Подскажите, пожалуйста, актуальные цены и наличие.`
     : `Здравствуйте! Хочу подобрать недвижимость в Камбодже${BRAND.mark}.`;
+  for (const [key, value] of Object.entries(answers || {})) text += `\n${key}: ${value.toLowerCase()}`;
   return `https://t.me/${CONTACT}?text=${encodeURIComponent(text)}`;
+}
+
+function askQuiz(project, done) {
+  const answers = {};
+  const sheet = el("div", "quiz");
+  const box = el("div", "quiz-box");
+  sheet.append(box);
+  const close = () => { sheet.remove(); if (inTelegram) tg.MainButton.show(); };
+  sheet.onclick = (e) => { if (e.target === sheet) close(); };
+  const step = (i) => {
+    if (i >= QUIZ.length) { close(); done(answers); return; }
+    const q = QUIZ[i];
+    box.replaceChildren(
+      el("p", "eyebrow", `Вопрос ${i + 1} из ${QUIZ.length}`),
+      el("h3", "", q.question),
+      ...q.options.map((option) => {
+        const b = el("button", "quiz-option", option);
+        b.type = "button";
+        b.onclick = () => { answers[q.key] = option; step(i + 1); };
+        return b;
+      }),
+      el("p", "quiz-note", "Чтобы сразу прислать варианты и цены под вашу задачу"),
+    );
+  };
+  if (inTelegram) tg.MainButton.hide();
+  document.body.append(sheet);
+  step(0);
 }
 
 function openLink(url) {
@@ -85,18 +121,18 @@ function openLink(url) {
 
 function setCta(project) {
   const label = project ? "Узнать цены и наличие" : "Подобрать квартиру";
-  const url = contactLink(project);
   const lead = () => track(`/lead/${project ? project.slug : "home"}`, `Заявка: ${project ? project.title : "подбор"}`, true);
-  cta.onclick = lead;
+  const start = () => askQuiz(project, (answers) => { lead(); openLink(contactLink(project, answers)); });
+  cta.onclick = (e) => { e.preventDefault(); start(); };
   if (inTelegram) {
     tg.MainButton.offClick(tg.MainButton.__handler || (() => {}));
-    tg.MainButton.__handler = () => { lead(); openLink(url); };
+    tg.MainButton.__handler = start;
     tg.MainButton.setParams({ text: label, is_visible: true });
     tg.MainButton.onClick(tg.MainButton.__handler);
     return;
   }
   cta.textContent = label;
-  cta.href = url;
+  cta.href = contactLink(project);
   cta.hidden = false;
   document.body.classList.add("has-cta");
 }
